@@ -1,4 +1,6 @@
-export const createFilterTemplate = (filters) => {
+import {createElement} from "../utils.js";
+
+const createFilterTemplate = (filters) => {
 
   const createFilterItemTemplate = () => {
     return filters.map(({title}, index) => (
@@ -23,3 +25,26 @@ export const createFilterTemplate = (filters) => {
     </form>`
   );
 };
+
+export default class Filter {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilterTemplate(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,5 +1,5 @@
-import {capitalize, getPlaceholder, formatDate, formatTripDuration} from "../utils.js";
 import {DateFormat} from "../consts.js";
+import {capitalize, getPlaceholder, formatDate, formatTripDuration, createElement} from "../utils.js";
 
 const createOfferTemplate = ({offers}) => {
   return offers.map(({title, price}) => (
@@ -11,7 +11,7 @@ const createOfferTemplate = ({offers}) => {
   )).slice(0, 3).join(``);
 };
 
-export const createTripTemplate = (trip) => {
+const createTripTemplate = (trip) => {
 
   const {
     type,
@@ -55,3 +55,26 @@ export const createTripTemplate = (trip) => {
     </li>`
   );
 };
+
+export default class Trip {
+  constructor(trip) {
+    this._trip = trip;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripTemplate(this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
