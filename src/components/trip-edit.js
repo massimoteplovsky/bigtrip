@@ -1,5 +1,5 @@
 import {TYPES, ACTIVITIES, EventCategory, DateFormat, CITIES} from "../consts.js";
-import {capitalize, getPlaceholder, formatDate} from "../utils.js";
+import {capitalize, getPlaceholder, formatDate, createElement} from "../utils.js";
 
 const createTypeItemTransferTemplate = (eventCategory) => {
   return TYPES.reduce((acc, type) => {
@@ -148,3 +148,26 @@ export const createAddEditTripTemplate = (trip) => {
     </form>`
   );
 };
+
+export default class TripEdit {
+  constructor(trip) {
+    this._trip = trip;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createAddEditTripTemplate(this._trip);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

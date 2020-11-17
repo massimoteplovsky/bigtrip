@@ -1,16 +1,16 @@
 import {createElement} from "../utils.js";
 
-const createAddEventButtonTemplate = () => {
-  return `<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>`;
+const createNoTripTemplate = () => {
+  return `<p class="trip-events__msg">Click New Event to create your first point</p>`;
 };
 
-export default class AddEventButton {
+export default class NoTrips {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createAddEventButtonTemplate();
+    return createNoTripTemplate();
   }
 
   getElement() {

@@ -1,4 +1,6 @@
-export const createTripInfoTemplate = (trips) => {
+import {createElement} from "../utils.js";
+
+const createTripInfoTemplate = (trips) => {
 
   const generateTripInfoTitle = () => {
     const cities = [...new Set(trips.map((trip) => trip.destination.name))];
@@ -35,3 +37,26 @@ export const createTripInfoTemplate = (trips) => {
     </section>`
   );
 };
+
+export default class TripInfo {
+  constructor(trips) {
+    this._trips = trips;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._trips);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
