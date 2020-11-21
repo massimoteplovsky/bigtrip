@@ -1,27 +1,13 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createTripContainerTemplate = () => {
   return `<ul class="trip-days"></ul>`;
 };
 
-export default class Container {
-  constructor() {
-    this._element = null;
-  }
+export default class Container extends Abstract {
 
   getTemplate() {
     return createTripContainerTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

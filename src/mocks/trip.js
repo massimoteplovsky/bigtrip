@@ -1,5 +1,5 @@
 import moment from "moment";
-import {getRandomInteger} from "../utils";
+import {getRandomInteger} from "../utils/common.js";
 import {
   TYPES,
   CITIES,

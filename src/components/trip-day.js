@@ -1,37 +1,33 @@
-import {formatDate, createElement} from "../utils.js";
+import Abstract from "./abstract.js";
+import {formatDate} from "../utils/common.js";
 import {DateFormat} from "../consts.js";
 
-const createTripDayTemplate = (date, index) => {
+const createTripDayTemplate = (date, index = ``) => {
   return (
-    `<li class="trip-days__item  day">
+    `<li class="trip-days__item day">
       <div class="day__info">
-        <span class="day__counter">${index + 1}</span>
-        <time class="day__date" datetime="2019-03-18">${formatDate(date, DateFormat.MONTH)}</time>
+        <span class="day__counter">${index}</span>
+        <time
+          class="day__date"
+          datetime="${date ? formatDate(date, DateFormat.TO_ISO) : ``}"
+        >
+          ${date ? formatDate(date, DateFormat.MONTH) : ``}
+        </time>
       </div>
     </li>`
   );
 };
 
-export default class TripDay {
+export default class TripDay extends Abstract {
+
   constructor(date, index) {
+    super();
     this._date = date;
     this._index = index;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripDayTemplate(this._date, this._index);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
