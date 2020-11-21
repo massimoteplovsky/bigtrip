@@ -1,5 +1,6 @@
+import Abstract from "./abstract.js";
 import {TYPES, ACTIVITIES, EventCategory, DateFormat, CITIES} from "../consts.js";
-import {capitalize, getPlaceholder, formatDate, createElement} from "../utils.js";
+import {capitalize, getPlaceholder, formatDate} from "../utils/common.js";
 
 const createTypeItemTransferTemplate = (eventCategory) => {
   return TYPES.reduce((acc, type) => {
@@ -149,25 +150,36 @@ export const createAddEditTripTemplate = (trip) => {
   );
 };
 
-export default class TripEdit {
+export default class TripEdit extends Abstract {
   constructor(trip) {
+    super();
     this._trip = trip;
-    this._element = null;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._editFormCloseHandler = this._editFormCloseHandler.bind(this);
   }
 
   getTemplate() {
     return createAddEditTripTemplate(this._trip);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  _editFormCloseHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeEditForm();
   }
+
+  setCloseFormHandler(callback) {
+    this._callback.closeEditForm = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editFormCloseHandler);
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().addEventListener(`submit`, this._formSubmitHandler);
+  }
+
 }

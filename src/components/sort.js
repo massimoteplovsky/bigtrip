@@ -1,31 +1,46 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
+import {SortType} from "../consts.js";
 
 const createSortItemTemplate = () => {
   const sortItem = {
     event: {
-      title: `event`
+      title: `event`,
+      sortType: SortType.DEFAULT
     },
     time: {
       title: `time`,
+      sortType: SortType.TIME_DOWN,
       icon: `<svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
               <path d="M2.888 4.852V9.694H5.588V4.852L7.91 5.068L4.238 0.00999987L0.548 5.068L2.888 4.852Z"/>
             </svg>`
     },
     price: {
       title: `price`,
+      sortType: SortType.PRICE_DOWN,
       icon: `<svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
               <path d="M2.888 4.852V9.694H5.588V4.852L7.91 5.068L4.238 0.00999987L0.548 5.068L2.888 4.852Z"/>
             </svg>`
     }
   };
 
-  return Object.keys(sortItem).map((item) => {
-    const {title, icon = ``} = sortItem[item];
+  return Object.keys(sortItem).map((item, index) => {
+    const {title, icon = ``, sortType} = sortItem[item];
 
     return (
       `<div class="trip-sort__item  trip-sort__item--${title}">
-        <input id="sort-${title}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${title}">
-        <label class="trip-sort__btn" for="sort-${title}">
+        <input
+          id="sort-${title}"
+          class="trip-sort__input  visually-hidden"
+          type="radio"
+          name="trip-sort"
+          value="sort-${title}"
+          ${index === 0 ? `checked` : ``}
+        >
+        <label
+          class="trip-sort__btn"
+          for="sort-${title}"
+          data-sort-type="${sortType}"
+        >
           ${title}
           ${icon}
         </label>
@@ -45,24 +60,32 @@ const createSortTemplate = () => {
   );
 };
 
-export default class TripInfo {
+export default class TripInfo extends Abstract {
+
   constructor() {
-    this._element = null;
+    super();
+
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
     return createSortTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
+  _sortTypeChangeHandler(evt) {
+
+    if (evt.target.tagName !== `LABEL`) {
+      return;
     }
 
-    return this._element;
+    const sortType = evt.target.dataset.sortType;
+
+    this._callback.sortTypeChange(sortType);
   }
 
-  removeElement() {
-    this._element = null;
+  setSortTypeChangeHandler(callback) {
+    this._callback.sortTypeChange = callback;
+    this.getElement().addEventListener(`click`, this._sortTypeChangeHandler);
   }
+
 }

@@ -1,5 +1,7 @@
+import Abstract from "./abstract.js";
 import {DateFormat} from "../consts.js";
-import {capitalize, getPlaceholder, formatDate, formatTripDuration, createElement} from "../utils.js";
+import {capitalize, getPlaceholder, formatDate} from "../utils/common.js";
+import {formatTripDuration} from "../utils/trip.js";
 
 const createOfferTemplate = ({offers}) => {
   return offers.map(({title, price}) => (
@@ -56,25 +58,25 @@ const createTripTemplate = (trip) => {
   );
 };
 
-export default class Trip {
+export default class Trip extends Abstract {
   constructor(trip) {
+    super();
     this._trip = trip;
-    this._element = null;
+    this._openEditFormHandler = this._openEditFormHandler.bind(this);
   }
 
   getTemplate() {
     return createTripTemplate(this._trip);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _openEditFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.openEditForm();
   }
 
-  removeElement() {
-    this._element = null;
+  setOpenEditFormHandler(callback) {
+    this._callback.openEditForm = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._openEditFormHandler);
   }
+
 }

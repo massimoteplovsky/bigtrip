@@ -1,4 +1,5 @@
-import {createElement, capitalize} from "../utils.js";
+import Abstract from "./abstract.js";
+import {capitalize} from "../utils/common.js";
 
 const createMenuItemTemplate = () => {
   const menuItems = [`table`, `stats`];
@@ -13,24 +14,10 @@ const createMenuTemplate = () => {
   );
 };
 
-export default class Menu {
-  constructor() {
-    this._element = null;
-  }
+export default class Menu extends Abstract {
 
   getTemplate() {
     return createMenuTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

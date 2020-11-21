@@ -17,5 +17,12 @@ export const EventCategory = {
 export const DateFormat = {
   TIME: `time`,
   FULL: `full`,
-  MONTH: `month`
+  MONTH: `month`,
+  TO_ISO: `iso`
+};
+
+export const SortType = {
+  DEFAULT: `default`,
+  TIME_DOWN: `time-down`,
+  PRICE_DOWN: `price-down`
 };
