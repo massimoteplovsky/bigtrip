@@ -7,6 +7,8 @@ import {
   OFFERS
 } from "../consts.js";
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const generateDestinations = () => {
   return CITIES.reduce((actual, next) => {
     actual.push({
@@ -18,15 +20,6 @@ const generateDestinations = () => {
   }, []);
 };
 
-const generateOffers = () => {
-  return TYPES.map((type) => {
-    return {
-      type,
-      offers: OFFERS
-    };
-  });
-};
-
 const getPicures = (count) => {
   return new Array(count).fill().map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
 };
@@ -36,12 +29,8 @@ const getDescription = (count) => {
   return new Array(count).fill().map(() => sentences[getRandomInteger(0, sentences.length - 1)]).join(`\n.`);
 };
 
-const getOffers = (offersList, type) => {
-  const offer = offersList.find((item) => item.type === type);
-  return {
-    type,
-    offers: offer.offers.slice(0, getRandomInteger(0, offer.offers.length - 1))
-  };
+export const getOffers = () => {
+  return OFFERS.slice(0, getRandomInteger(0, OFFERS.length - 1));
 };
 
 const generateDateFrom = () => {
@@ -52,15 +41,15 @@ const generateDateTo = () => {
   return moment().add(getRandomInteger(0, 1), `day`).add(getRandomInteger(1, 23), `hour`).add(getRandomInteger(0, 59), `minute`).toISOString();
 };
 
-const destinations = generateDestinations();
-const offersList = generateOffers();
+export const destinations = generateDestinations();
 
 export const generateTrip = () => {
   const type = TYPES[getRandomInteger(0, TYPES.length - 1)];
 
   return {
+    id: generateId(),
     type,
-    offer: getOffers(offersList, type),
+    offers: getOffers(),
     destination: destinations[getRandomInteger(0, CITIES.length - 1)],
     isFavorite: Math.random() > 0.5,
     dateFrom: generateDateFrom(),

@@ -5,7 +5,7 @@ import AddEventButton from "./components/add-event-button.js";
 import {generateTrip} from "./mocks/trip.js";
 import {generateFilters} from "./mocks/filter.js";
 import {render, RenderPosition} from "./utils/render.js";
-import TripController from "./controllers/trip.js";
+import BoardController from "./controllers/board.js";
 
 const TRIP_COUNT = 15;
 const trips = new Array(TRIP_COUNT).fill().map(generateTrip);
@@ -25,5 +25,5 @@ render(tripControlsElement, menuComponent);
 render(tripControlsElement, filterComponent);
 render(tripMainElement, addEventButtonComponent);
 
-const tripController = new TripController(tripEventsContainerElement);
+const tripController = new BoardController(tripEventsContainerElement);
 tripController.init(trips);
