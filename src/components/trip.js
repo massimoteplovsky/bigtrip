@@ -1,9 +1,12 @@
+import flatpickr from "flatpickr";
 import Abstract from "./abstract.js";
 import {DateFormat} from "../consts.js";
 import {capitalize, getPlaceholder, formatDate} from "../utils/common.js";
 import {formatTripDuration} from "../utils/trip.js";
 
-const createOfferTemplate = ({offers}) => {
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
+const createOfferTemplate = (offers) => {
   return offers.map(({title, price}) => (
     `<li class="event__offer">
       <span class="event__offer-title">${title}</span>
@@ -17,7 +20,7 @@ const createTripTemplate = (trip) => {
 
   const {
     type,
-    offer,
+    offers,
     destination,
     dateFrom,
     dateTo,
@@ -47,7 +50,7 @@ const createTripTemplate = (trip) => {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${createOfferTemplate(offer)}
+          ${createOfferTemplate(offers)}
         </ul>
 
         <button class="event__rollup-btn" type="button">

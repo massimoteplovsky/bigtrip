@@ -1,6 +1,10 @@
-import Abstract from "./abstract.js";
+import flatpickr from "flatpickr";
+import AbstractSmartComponent from "./abstract-smart.js";
 import {TYPES, ACTIVITIES, EventCategory, DateFormat, CITIES} from "../consts.js";
 import {capitalize, getPlaceholder, formatDate} from "../utils/common.js";
+import {getOffers, destinations} from "../mocks/trip.js";
+
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const createTypeItemTransferTemplate = (eventCategory) => {
   return TYPES.reduce((acc, type) => {
@@ -43,12 +47,11 @@ const createOfferTemplate = ((offers) => {
   )).join(``);
 });
 
-const createOfferListTemplate = ({offers}) => {
+const createOfferListTemplate = (offers) => {
   return offers.length > 0 ?
     (`<section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
         <div class="event__available-offers">
           ${createOfferTemplate(offers)}
         </div>
@@ -57,11 +60,36 @@ const createOfferListTemplate = ({offers}) => {
     : ``;
 };
 
+const createDestinationTemplate = (destination) => {
+
+  if (!destination) {
+    return ``;
+  }
+
+  const {
+    description,
+    pictures
+  } = destination;
+
+  return (
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${description}</p>
+
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+          ${pictures.map((picture) => `<img class="event__photo" src=${picture} alt="Event photo"></img>`)}
+        </div>
+      </div>
+    </section>`
+  );
+};
+
 export const createAddEditTripTemplate = (trip) => {
 
   const {
     type,
-    offer,
+    offers,
     destination,
     dateFrom,
     dateTo,
@@ -145,26 +173,132 @@ export const createAddEditTripTemplate = (trip) => {
         </button>
       </header>
 
-      ${createOfferListTemplate(offer)}
+      ${createOfferListTemplate(offers)}
+      ${createDestinationTemplate(destination)}
     </form>`
   );
 };
 
-export default class TripEdit extends Abstract {
+export default class TripEdit extends AbstractSmartComponent {
+
   constructor(trip) {
     super();
-    this._trip = trip;
+    this._data = trip;
+    this._dateFrom = null;
+    this._dateTo = null;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._editFormCloseHandler = this._editFormCloseHandler.bind(this);
+    this._favoriteButtonToggleHandler = this._favoriteButtonToggleHandler.bind(this);
+    this._changeTripTypeHandler = this._changeTripTypeHandler.bind(this);
+    this._changeTripDestination = this._changeTripDestination.bind(this);
+    this._changeDateFrom = this._changeDateFrom.bind(this);
+    this._changeDateTo = this._changeDateTo.bind(this);
+
+    this._setInnerHandlers();
+    this._setDatepickers();
   }
 
   getTemplate() {
-    return createAddEditTripTemplate(this._trip);
+    return createAddEditTripTemplate(this._data);
   }
 
+  _setDatepickers() {
+
+    if (this._dateFrom) {
+      this._dateFrom.destroy();
+      this._dateFrom = null;
+    }
+
+    if (this._dateTo) {
+      this._dateTo.destroy();
+      this._dateTo = null;
+    }
+
+    this._dateFrom = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          dateFormat: `d/m/Y H:m`,
+          defaultDate: this._data.dateFrom,
+          enableTime: true,
+          onChange: this._changeDateFrom
+        }
+    );
+
+    this._dateTo = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          dateFormat: `d/m/Y H:m`,
+          defaultDate: this._data.dateTo,
+          enableTime: true,
+          onChange: this._changeDateTo
+        }
+    );
+  }
+
+  _changeDateFrom([userDate]) {
+    this.updateData({
+      dateFrom: userDate
+    });
+  }
+
+  _changeDateTo([userDate]) {
+    this.updateData({
+      dateTo: userDate
+    });
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteButtonToggleHandler);
+    this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._changeTripTypeHandler);
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._changeTripDestination);
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`focus`, (evt) => {
+      evt.target.value = ``;
+    });
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`blur`, (evt) => {
+      evt.target.value = this._data.destination.name;
+    });
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this._setDatepickers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setCloseFormHandler(this._callback.closeEditForm);
+  }
+
+  // Inner handlers
+  _changeTripDestination(evt) {
+    evt.preventDefault();
+    const destinationCity = evt.target.value;
+
+    if (!CITIES.includes(destinationCity)) {
+      return;
+    }
+
+    this.updateData({
+      destination: destinations.find((destination) => destination.name === destinationCity)
+    });
+  }
+
+  _favoriteButtonToggleHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      isFavorite: !this._data.isFavorite
+    });
+  }
+
+  _changeTripTypeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value,
+      offers: getOffers()
+    });
+  }
+
+  // External handlers
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._data);
   }
 
   _editFormCloseHandler(evt) {
@@ -172,6 +306,7 @@ export default class TripEdit extends Abstract {
     this._callback.closeEditForm();
   }
 
+  // Handler setters
   setCloseFormHandler(callback) {
     this._callback.closeEditForm = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editFormCloseHandler);

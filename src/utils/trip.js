@@ -33,3 +33,17 @@ export const getTripDates = (trips) => {
 };
 
 export const getTripsByDate = (trips, eventDate) => trips.filter((trip) => moment(trip.dateFrom, `YYYY-MM-DD`).isSame(eventDate));
+
+export const updateItem = (trips, updatedTrip) => {
+  const tripIndex = trips.findIndex((trip) => trip.id === updatedTrip.id);
+
+  if (tripIndex === -1) {
+    return trips;
+  }
+
+  return [
+    ...trips.slice(0, tripIndex),
+    updatedTrip,
+    ...trips.slice(tripIndex + 1)
+  ];
+};
