@@ -9,6 +9,8 @@ export const OFFERS = [
   {title: `Choose seats`, price: 10, type: `seat`},
 ];
 export const ACTIVITIES = [`sightseeing`, `restaurant`, `check-in`];
+export const TRANSPORTS = [`taxi`, `bus`, `train`, `ship`, `drive`, `flight`];
+
 export const EventCategory = {
   TRANSFER: `transfers`,
   ACTIVITY: `activities`
@@ -25,4 +27,27 @@ export const SortType = {
   DEFAULT: `default`,
   TIME_DOWN: `time-down`,
   PRICE_DOWN: `price-down`
+};
+
+export const FilterType = {
+  EVERYTHING: `everything`,
+  TODAY: `today`,
+  FUTURE: `future`
+};
+
+export const UserAction = {
+  UPDATE_TRIP: `update`,
+  ADD_TRIP: `add`,
+  DELETE_TRIP: `delete`,
+  CHANGE_FILTER: `changeFilter`
+};
+
+export const ButtonItem = {
+  ADD_TRIP: `add`
+};
+
+export const MenuItem = {
+  TRIP: `trip`,
+  TABLE: `table`,
+  STATS: `stats`
 };

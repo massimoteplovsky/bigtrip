@@ -2,12 +2,21 @@ import moment from "moment";
 import {formatDate} from "./common.js";
 import {DateFormat} from "../consts.js";
 
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 export const sortTripByTime = (tripA, tripB) => {
   return countTripDuration(tripB.dateTo, tripB.dateFrom) - countTripDuration(tripA.dateTo, tripA.dateFrom);
 };
 
 export const sortTripByPrice = (tripA, tripB) => {
   return tripB.basePrice - tripA.basePrice;
+};
+
+export const getTodayDate = () => {
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+
+  return new Date(currentDate);
 };
 
 export const countTripDuration = (dateTo, dateFrom) => moment(dateTo).diff(dateFrom, `minutes`);
@@ -46,4 +55,14 @@ export const updateItem = (trips, updatedTrip) => {
     updatedTrip,
     ...trips.slice(tripIndex + 1)
   ];
+};
+
+export const validateForm = (trip) => {
+  const {dateFrom, dateTo} = trip;
+
+  if (moment(dateTo).isSameOrBefore(dateFrom)) {
+    return false;
+  }
+
+  return true;
 };
