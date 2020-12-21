@@ -1,4 +1,5 @@
 import moment from "moment";
+import {generateId} from "../utils/trip.js";
 import {getRandomInteger} from "../utils/common.js";
 import {
   TYPES,
@@ -7,9 +8,7 @@ import {
   OFFERS
 } from "../consts.js";
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
-
-const generateDestinations = () => {
+export const generateDestinations = () => {
   return CITIES.reduce((actual, next) => {
     actual.push({
       name: next,

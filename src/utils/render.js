@@ -2,10 +2,11 @@ import Abstract from "../components/abstract.js";
 
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  BEFOREBEGIN: `beforebegin`
 };
 
-export const render = (container, child, place = RenderPosition.BEFOREEND) => {
+export const render = (container, child, place = RenderPosition.BEFOREEND, referencedElement = null) => {
 
   if (container instanceof Abstract) {
     container = container.getElement();
@@ -21,6 +22,9 @@ export const render = (container, child, place = RenderPosition.BEFOREEND) => {
       break;
     case RenderPosition.BEFOREEND:
       container.append(child);
+      break;
+    case RenderPosition.BEFOREBEGIN:
+      container.insertBefore(child, referencedElement);
       break;
   }
 };
