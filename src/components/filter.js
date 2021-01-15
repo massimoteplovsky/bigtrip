@@ -3,7 +3,7 @@ import Abstract from "./abstract.js";
 const createFilterTemplate = (filters, currentFilter) => {
 
   const createFilterItemTemplate = () => {
-    return filters.map(({type}) => (
+    return filters.map(({type, tripsCount}) => (
       `<div class="trip-filters__filter">
         <input
           id="filter-${type}"
@@ -12,6 +12,7 @@ const createFilterTemplate = (filters, currentFilter) => {
           name="trip-filter"
           value="${type}"
           ${type === currentFilter ? `checked` : ``}
+          ${tripsCount === 0 ? `disabled` : ``}
         >
         <label class="trip-filters__filter-label" for="filter-${type}">${type}</label>
       </div>`

@@ -1,7 +1,8 @@
 import Abstract from "./abstract.js";
 import {SortType} from "../consts.js";
 
-const createSortItemTemplate = () => {
+const createSortItemTemplate = (currentSortType) => {
+
   const sortItem = {
     event: {
       title: `event`,
@@ -23,7 +24,7 @@ const createSortItemTemplate = () => {
     }
   };
 
-  return Object.keys(sortItem).map((item, index) => {
+  return Object.keys(sortItem).map((item) => {
     const {title, icon = ``, sortType} = sortItem[item];
 
     return (
@@ -34,7 +35,7 @@ const createSortItemTemplate = () => {
           type="radio"
           name="trip-sort"
           value="sort-${title}"
-          ${index === 0 ? `checked` : ``}
+          ${sortType === currentSortType ? `checked` : ``}
         >
         <label
           class="trip-sort__btn"
@@ -50,11 +51,11 @@ const createSortItemTemplate = () => {
   }).join(``);
 };
 
-const createSortTemplate = () => {
+const createSortTemplate = (sortType) => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <span class="trip-sort__item  trip-sort__item--day">Day</span>
-      ${createSortItemTemplate()}
+      ${createSortItemTemplate(sortType)}
       <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
     </form>`
   );
@@ -62,14 +63,15 @@ const createSortTemplate = () => {
 
 export default class TripInfo extends Abstract {
 
-  constructor() {
+  constructor(sortType) {
     super();
+    this._currentSortType = sortType;
 
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createSortTemplate();
+    return createSortTemplate(this._currentSortType);
   }
 
   _sortTypeChangeHandler(evt) {

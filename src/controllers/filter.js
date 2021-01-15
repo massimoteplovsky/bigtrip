@@ -1,6 +1,7 @@
 import FilterView from "../components/filter.js";
 import {FilterType, UserAction} from "../consts.js";
 import {render, replace, remove, RenderPosition} from "../utils/render.js";
+import {filter} from "../utils/filter.js";
 
 export default class Filter {
   constructor(filterContainer, filterModel, tripModel) {
@@ -21,7 +22,7 @@ export default class Filter {
   init() {
     this._currentFilter = this._filterModel.getFilter();
 
-    const filters = this._getFilters();
+    const filters = this._getFilters(this._tripModel.getTrips());
     const prevFilterComponent = this._filterComponent;
 
     this._filterComponent = new FilterView(filters, this._currentFilter);
@@ -44,19 +45,19 @@ export default class Filter {
     this._filterModel.setFilter(UserAction.CHANGE_FILTER, filterType);
   }
 
-  _getFilters() {
+  _getFilters(trips) {
     return [
       {
         type: FilterType.EVERYTHING,
-        name: `Everything`
+        tripsCount: filter[FilterType.EVERYTHING](trips).length
       },
       {
         type: FilterType.TODAY,
-        name: `Today`
+        tripsCount: filter[FilterType.TODAY](trips).length
       },
       {
         type: FilterType.FUTURE,
-        name: `Future`
+        tripsCount: filter[FilterType.FUTURE](trips).length
       }
     ];
   }

@@ -14,6 +14,10 @@ export const getPlaceholder = (type) => {
   return ACTIVITIES.includes(type) ? `in` : `to`;
 };
 
+export const getDatesRange = (start, end) => {
+  return `${formatDate(start, DateFormat.MONTH)}&nbsp;&mdash;&nbsp;${moment(start).isSame(end, `month`) ? formatDate(end, DateFormat.DAY) : formatDate(end, DateFormat.MONTH)}`;
+};
+
 export const formatDate = (date, option) => {
   const sourceDate = moment(date);
   switch (option) {
@@ -25,6 +29,8 @@ export const formatDate = (date, option) => {
       return sourceDate.format(`MMM DD`);
     case DateFormat.TO_ISO:
       return sourceDate.format(`YYYY-MM-DD`);
+    case DateFormat.DAY:
+      return sourceDate.format(`DD`);
     default:
       return date;
   }

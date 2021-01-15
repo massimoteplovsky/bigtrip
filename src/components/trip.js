@@ -1,4 +1,3 @@
-import flatpickr from "flatpickr";
 import Abstract from "./abstract.js";
 import {DateFormat} from "../consts.js";
 import {capitalize, getPlaceholder, formatDate} from "../utils/common.js";
