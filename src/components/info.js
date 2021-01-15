@@ -1,4 +1,6 @@
 import Abstract from "./abstract.js";
+import {sortByTimeFrom, sortByTimeEnd} from "../utils/trip.js";
+import {getDatesRange} from "../utils/common.js";
 
 const createTripInfoTemplate = (trips) => {
 
@@ -24,11 +26,21 @@ const createTripInfoTemplate = (trips) => {
     }, 0);
   };
 
+  const getTripDates = () => {
+
+    const startDate = trips.sort(sortByTimeFrom)[0].dateFrom;
+    const endDate = trips.sort(sortByTimeEnd)[0].dateTo;
+
+    //const isDatesSame = moment(startDate).isSame(endDate);
+
+    return getDatesRange(startDate, endDate);
+  };
+
   return (
     `<section class="trip-main__trip-info  trip-info">
         <div class="trip-info__main">
           <h1 class="trip-info__title">${generateTripInfoTitle()}</h1>
-          <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+          <p class="trip-info__dates">${getTripDates()}</p>
         </div>
 
         <p class="trip-info__cost">

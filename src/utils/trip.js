@@ -1,11 +1,23 @@
 import moment from "moment";
+import Api from "../api.js";
 import {formatDate} from "./common.js";
 import {DateFormat} from "../consts.js";
+import cloneDeep from 'lodash.clonedeep';
 
-export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+const api = new Api();
+
+export const offers = api.getOffers((offersList) => offersList);
 
 export const sortTripByTime = (tripA, tripB) => {
   return countTripDuration(tripB.dateTo, tripB.dateFrom) - countTripDuration(tripA.dateTo, tripA.dateFrom);
+};
+
+export const sortByTimeFrom = (tripA, tripB) => {
+  return moment(tripA.dateFrom).diff(tripB.dateFrom);
+};
+
+export const sortByTimeEnd = (tripA, tripB) => {
+  return moment(tripB.dateTo).diff(tripA.dateTo);
 };
 
 export const sortTripByPrice = (tripA, tripB) => {
@@ -41,7 +53,7 @@ export const getTripDates = (trips) => {
   return [...new Set(trips.map((trip) => formatDate(trip.dateFrom, DateFormat.TO_ISO)).sort())];
 };
 
-export const getTripsByDate = (trips, eventDate) => trips.filter((trip) => moment(trip.dateFrom, `YYYY-MM-DD`).isSame(eventDate));
+export const getTripsByDate = (trips, eventDate) => trips.filter((trip) => formatDate(trip.dateFrom, DateFormat.TO_ISO) === eventDate);
 
 export const updateItem = (trips, updatedTrip) => {
   const tripIndex = trips.findIndex((trip) => trip.id === updatedTrip.id);
@@ -65,4 +77,8 @@ export const validateForm = (trip) => {
   }
 
   return true;
+};
+
+export const clone = (obj) => {
+  return cloneDeep(obj);
 };

@@ -17,24 +17,6 @@ export default class AbstractSmartComponent extends Abstract {
     this.updateElement();
   }
 
-  updateData(update, justDataUpdating) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-        {},
-        this._data,
-        update
-    );
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
   updateElement() {
     let prevElement = this.getElement();
     const parent = prevElement.parentElement;
